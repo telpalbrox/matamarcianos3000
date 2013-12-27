@@ -27,6 +27,12 @@ public class Nave extends Rectangle {
 		}
 	}
 	
+	public void quitarVida(int danio) {
+		if(!invulnerabilidad) {
+			vida -= danio;
+		}
+	}
+	
 	public void sumarVida(int numero) {
 		vida += numero;
 	}

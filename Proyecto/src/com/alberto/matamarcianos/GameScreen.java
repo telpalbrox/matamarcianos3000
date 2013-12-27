@@ -2,6 +2,13 @@ package com.alberto.matamarcianos;
 
 import java.util.Iterator;
 
+import com.alberto.matamarcianos.enemgos.Enemigo;
+import com.alberto.matamarcianos.enemgos.Enemigo2;
+import com.alberto.matamarcianos.enemgos.NaveEnemiga;
+import com.alberto.matamarcianos.items.Item;
+import com.alberto.matamarcianos.laseres.LaserEnemigo;
+import com.alberto.matamarcianos.laseres.LaserEnemigo2;
+import com.alberto.matamarcianos.laseres.LaserEnemigo3;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Music;
@@ -15,7 +22,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
@@ -46,7 +52,7 @@ public class GameScreen implements Screen {
 	//Declaro variables de control
 	long retardo, momentoUltimoEnemigo, ultimoDisparo, retardoAcel, ultimoFondo, retardoFondo;
 	float tiempo, tiempo2, tiempoActual, tiempoLaser, tiempoSonido, volumen, tiempoPause;
-	int puntuacion, velocidad, pause;
+	int puntuacion, velocidad, pause, contEnem3;
 	boolean itemTiempo, pauseBool;
 	
 	//Creo los arrays de imÃ¡genes y de enemigos
@@ -70,12 +76,12 @@ public class GameScreen implements Screen {
 	public GameScreen(final Espacio gam) {
 		this.game = gam;
 		//Cargo las imagenes
-		naveImagen = new Texture(Gdx.files.internal("data/nave.png"));
-		laserImagen = new Texture(Gdx.files.internal("data/laserNave.png"));
-		fondoImagen = new Texture(Gdx.files.internal("data/fondo.png"));
-		laserSonido = Gdx.audio.newSound(Gdx.files.internal("data/laser.mp3"));
-		explosionSonido = Gdx.audio.newSound(Gdx.files.internal("data/explosion.mp3"));
-		musica = Gdx.audio.newMusic(Gdx.files.internal("data/musica.mp3"));
+		naveImagen = new Texture(Gdx.files.internal("data/images/nave.png"));
+		laserImagen = new Texture(Gdx.files.internal("data/images/laserNave.png"));
+		fondoImagen = new Texture(Gdx.files.internal("data/images/fondo.png"));
+		laserSonido = Gdx.audio.newSound(Gdx.files.internal("data/sound/laser.mp3"));
+		explosionSonido = Gdx.audio.newSound(Gdx.files.internal("data/sound/explosion.mp3"));
+		musica = Gdx.audio.newMusic(Gdx.files.internal("data/sound/musica.mp3"));
 		musica.setLooping(true);
 		musica.play();
 		
@@ -110,19 +116,19 @@ public class GameScreen implements Screen {
 		retardo = 100000000;
 		retardoFondo = 100000000/2;
 		retardoAcel = 0;
-		puntuacion = 1;
+		puntuacion = 0;
 		itemTiempo = false;
 		velocidad = 0;
 		volumen = 0.4f;
 		pause = 1;
+		contEnem3 = 0;
 		pauseBool = false;
 				
 		//Spawneo un enemigo siempre
-		spawnEnemigo0(enemigos);
-		SpawnUtils.spawnItemVelocidad(items);
+		spawnEnemigo0();
 		
 		//ANIMACION
-		explosionFolio = new Texture(Gdx.files.internal("data/explosion_folio.png"));     // #9
+		explosionFolio = new Texture(Gdx.files.internal("data/images/explosion_folio.png"));     // #9
         TextureRegion[][] tmp = TextureRegion.split(explosionFolio, explosionFolio.getWidth() / FRAME_COLS, explosionFolio.getHeight() / FRAME_ROWS);                                // #10
         explosionFoto = new TextureRegion[FRAME_COLS * FRAME_ROWS];
         int index = 0;
@@ -135,19 +141,18 @@ public class GameScreen implements Screen {
         tiempoEstado = 0f;
         
         spawnFondo();
-        SpawnUtils.spawnEnemigo3(enemigos);
-        SpawnUtils.spawnEnemigo2(enemigos);
         ultimoFondo = TimeUtils.nanoTime();
  }
 
 	@Override
 	public void render(float Delta) {
 		if(!pauseBool) {
+			//Si el juego no está en pause el tiempo pasa
 			tiempo += Math.rint(Gdx.graphics.getDeltaTime() * 100) / 100;
-			tiempoEstado += Gdx.graphics.getDeltaTime();
+			tiempoEstado += Gdx.graphics.getDeltaTime(); //Tiempo para controlar las animaciones
 		}
-		tiempo2 += Math.rint(Gdx.graphics.getDeltaTime() * 100) / 100;
-		fotoActual = explosionAnimacion.getKeyFrame(tiempoEstado, true);
+		tiempo2 += Math.rint(Gdx.graphics.getDeltaTime() * 100) / 100; //Tiempo que pasa aunque esté en pause
+		fotoActual = explosionAnimacion.getKeyFrame(tiempoEstado, true); //Según el tiempo se selecciona un fotograma
 		//Limpio la pantalla y la coloreo de negro
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 				
@@ -158,6 +163,7 @@ public class GameScreen implements Screen {
 		//Le digo al SpriteBatch que use las coordenadas especificadas por la cï¿½mara
 		game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
+		//Dibujo los fondos detrás de todo
 		for(Rectangle fondo : fondos) {
 			game.batch.draw(fondoImagen, fondo.x, fondo.y);
 		}
@@ -168,7 +174,7 @@ public class GameScreen implements Screen {
 				Vector2 vector = new Vector2();
 				enemigo.getCenter(vector);
 				game.batch.draw(fotoActual, vector.x-110, vector.y-95);
-			} else{
+			} else {
 				game.batch.draw(enemigo.cargarTextura(), enemigo.x, enemigo.y);
 			}
 		}
@@ -178,24 +184,31 @@ public class GameScreen implements Screen {
 		for(Rectangle laser : laseres) {
 			game.batch.draw(laserImagen, laser.x, laser.y);
 		}
+		//Dibujo en pantalla el array de items
 		for(Item item : items) {
 			game.batch.draw(item.cargarTextura(), item.x, item.y);
 		}
+		//Dibujo en pantalla el array de laseres enemigos
 		for(LaserEnemigo laser : laseresEnemigos) {
 			game.batch.draw(laser.cargarTextura(), laser.x, laser.y);
 		}
+		//Dibujo el estado de la nave
 		game.font.draw(game.batch, "Vidas: "+nave.obtenerVida(), RESOLUCIONX-125, RESOLUCIONY-100);
 		if(nave.esInvencible()) {
-			game.font.draw(game.batch, "Â¡Eres invencible!", RESOLUCIONX-125, RESOLUCIONY-75);
+			game.font.draw(game.batch, "Eres invencible!", RESOLUCIONX-125, RESOLUCIONY-75);
 		}
 		if(nave.esAcelerada()) {
-			game.font.draw(game.batch, "Â¡Nave acelerada!", RESOLUCIONX-125, RESOLUCIONY-125);
+			game.font.draw(game.batch, "Nave acelerada!", RESOLUCIONX-125, RESOLUCIONY-125);
 		}
 		game.font.draw(game.batch, "Puntuacion: "+puntuacion, RESOLUCIONX-125, RESOLUCIONY-50);
+		//Si está en pause
 		if(pauseBool) {
 			game.font.draw(game.batch, "PAUSE", RESOLUCIONX-RESOLUCIONX/2, RESOLUCIONY-RESOLUCIONY/2);
 		}
 		game.batch.end();
+		
+		//La velocidad aumenta en función de la puntuación
+		velocidad = -1 * (puntuacion + 50);
 				
 		//Controles de la nave
 		if(Gdx.input.isKeyPressed(Keys.A)) nave.x -= nave.obtenerVelocidadMovimiento() * Gdx.graphics.getDeltaTime() * pause; //Si se presiona la tecla izquierda se mueve 200 pixels
@@ -205,31 +218,23 @@ public class GameScreen implements Screen {
 			laserSonido.play(volumen);
 			ultimoDisparo = TimeUtils.nanoTime();
 		}
-		
+		//Control del pause
 		if((Gdx.input.isKeyPressed(Keys.ESCAPE) || Gdx.input.isKeyPressed(Keys.MENU)) && !pauseBool && tiempoPause + 0.5 <= tiempo2) {
-			System.out.println("Pause false");
 			pause = 0;
 			tiempoPause = tiempo2;
 			pauseBool = true;
 		}
 		if((Gdx.input.isKeyPressed(Keys.ESCAPE) || Gdx.input.isKeyPressed(Keys.MENU)) && pauseBool && tiempoPause + 0.5 <= tiempo2) {
-			System.out.println("Pause true");
 			pause = 1;
 			tiempoPause = tiempo2;
 			pauseBool = false;
 		}
 		
-		if(TimeUtils.nanoTime() - ultimoFondo > 100 && !pauseBool){
-			
-			spawnFondo();
-		}
-		
-		
 		/*
 		 * CONTROLES ANDROID
 		 */
 		if(Gdx.input.isTouched() && pause == 1) { //Si se estÃ¯Â¿Â½ tocando la pantalla
-			Vector2 touchPos = new Vector2(); //Transformo las coordenadas del ratÃ¯Â¿Â½n al sistema de coordenadas de la cÃ¯Â¿Â½mara
+			Vector2 touchPos = new Vector2();
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY());
 			nave.x = touchPos.x - 64 /2;
 		}
@@ -238,16 +243,20 @@ public class GameScreen implements Screen {
 			spawnLaser();
 			ultimoDisparo = TimeUtils.nanoTime();
 		}
-		
+		//Spawneo de enemigos
 		if(MathUtils.random(0, 5000/(puntuacion + 1)) == 0 && pause == 1) {
-			spawnEnemigo0(enemigos);
+			spawnEnemigo0();
 		}
 		//Spawneo de items
-		if(MathUtils.random(0, (100/(puntuacion+1)) + 300) == 0 && pause == 1) {
+		if(MathUtils.random(0, (100/(puntuacion + 1)) + 300) == 0 && pause == 1) {
 			spawnItem();
 		}
+		//Spawneo las imágenes de fondo si no está en pause y con retardo entre cada spawneo
+		if(TimeUtils.nanoTime() - ultimoFondo > 100 && !pauseBool){
+			spawnFondo();
+		}
 				
-		//Si se sale de los lï¿½mites
+		//Si la nave se sale de los lï¿½mites
 		if(nave.x < 0) nave.x = 0;
 		if(nave.x > RESOLUCIONX - 64) nave.x = RESOLUCIONX - 64;
 		
@@ -268,38 +277,10 @@ public class GameScreen implements Screen {
 		Iterator<NaveEnemiga> iterEnemigo = enemigos.iterator();
 		while(iterEnemigo.hasNext()){
 			NaveEnemiga enemigo = iterEnemigo.next();
-			//SegÃºn la puntuaciÃ³n lllevan una velocidad
-			velocidad = -1 * (puntuacion + 50);
+			//SegÃºn la puntuaciÃ³n llevan una velocidad, excepto Enemigo3 que tiene un movimiento especial
 			if(!enemigo.obtenerTipo().equals("enemigo3")) {
 				enemigo.fijarVelocidad(velocidad);
 				enemigo.y += enemigo.obtenerVelocidad() * Gdx.graphics.getDeltaTime() * pause;
-			}
-			if(enemigo.obtenerTipo().equals("enemigo3")) {
-				System.out.println("Enemigo3 y: "+enemigo.y);
-				System.out.println("Enemigo3 x: "+enemigo.x);
-				if(enemigo.y < RESOLUCIONY - 200) {
-					if(enemigo.y <= RESOLUCIONY - 400) {
-						enemigo.fijarVelocidad(50);
-					}
-					if(enemigo.y >= RESOLUCIONY - 250 && enemigo.y > 248) {
-						enemigo.fijarVelocidad(0);
-						enemigo.fijarVelocidadX(-50);
-						if(enemigo.x < 10) {
-							enemigo.fijarVelocidad(-50);
-							enemigo.fijarVelocidadX(0);
-						}
-					}
-					if(enemigo.y < RESOLUCIONY - 400 && enemigo.y > 398) {
-						enemigo.fijarVelocidad(0);
-						enemigo.fijarVelocidadX(50);
-						if(enemigo.x > RESOLUCIONX - 70) {
-							enemigo.fijarVelocidad(50);
-							enemigo.fijarVelocidadX(0);
-						}
-					}
-				}
-				enemigo.y += enemigo.obtenerVelocidad() * Gdx.graphics.getDeltaTime() * pause;
-				enemigo.x += enemigo.obtenerVelocidadX() * Gdx.graphics.getDeltaTime() * pause;
 			}
 			//Quito vida si los enemigos se chocan cotra la nave
 			if(enemigo.overlaps(nave) && !enemigo.esAnimacion()) {
@@ -310,9 +291,8 @@ public class GameScreen implements Screen {
 			}
 			//Elimino los enemigos sin vida
 			if(enemigo.obtenerVida()<= 0 && !enemigo.esAnimacion()) {
-				if(enemigo.obtenerTipo().equals("enemigo")) puntuacion += 1;
+				puntuacion += enemigo.obtenerVidaInicial();
 				if(enemigo.obtenerTipo().equals("enemigo2")) {
-					puntuacion += 3;
 					if(MathUtils.random(0, 4) == 0) {
 						SpawnUtils.spawnItemRetardo(items, enemigo);
 					}
@@ -329,20 +309,45 @@ public class GameScreen implements Screen {
 				nave.quitarVida();
 				iterEnemigo.remove();
 			}
-			//Si es enemigo de tipo 2 dispara laser
-			if(enemigo.obtenerTipo().equals("enemigo2")) {
+			//Si es enemigo de tipo 2 o 3 dispara laser
+			if(enemigo.obtenerTipo().equals("enemigo2") || enemigo.obtenerTipo().equals("enemigo3")) {
 				if(!enemigo.obtenerDisparaLaser()) {
-					enemigo.fijarTiempoLaser(tiempo);
-					enemigo.fijarDisparaLaser(true);
+					enemigo.fijarTiempoLaser(tiempo); //Fijo el momento en que disparó
+					enemigo.fijarDisparaLaser(true); //Está disparnado laser
 				}
-				if(enemigo.obtenerTiempoLaser() + 2 - (puntuacion/75) <= tiempo && puntuacion < 150) {
+				if(enemigo.obtenerTiempoLaser() + 2.5 <= tiempo) {
+					//Si han pasado más de dos segundos desde el último disparo
+					spawnLaserEnemigo(enemigo);
+					enemigo.fijarTiempoLaser(tiempo);
+				}
+				/*if(enemigo.obtenerTiempoLaser() + 2 - 1 <= tiempo && puntuacion >= 150) {
 					spawnLaserEnemigo2(enemigo);
 					enemigo.fijarTiempoLaser(tiempo);
+				}*/
+			}
+			//Si es enemigo3
+			if(enemigo.obtenerTipo().equals("enemigo3")) {
+				//Movimientos en pantalla
+				if(enemigo.y < RESOLUCIONY - 200) {
+					if(enemigo.y <= RESOLUCIONY - 400) {
+						enemigo.fijarVelocidad(velocidad);
+					}
+					if(enemigo.y >= RESOLUCIONY - 250 && enemigo.y > 246) {
+						enemigo.moverIzquierda(velocidad);
+						if(enemigo.x < 10) {
+							enemigo.moverAbajo(velocidad);
+						}
+					}
+					if(enemigo.y < RESOLUCIONY - 400 && enemigo.y > 396) {
+						enemigo.moverDerecha(velocidad);
+						if(enemigo.x > RESOLUCIONX - 70) {
+							enemigo.moverArriba(velocidad);
+						}
+					}
 				}
-				if(enemigo.obtenerTiempoLaser() + 2 - 1 <= tiempo && puntuacion >= 150) {
-					spawnLaserEnemigo2(enemigo);
-					enemigo.fijarTiempoLaser(tiempo);
-				}
+				//Muevo la nave
+				enemigo.y += enemigo.obtenerVelocidad() * Gdx.graphics.getDeltaTime() * pause;
+				enemigo.x += enemigo.obtenerVelocidadX() * Gdx.graphics.getDeltaTime() * pause;
 			}
 		}
 		
@@ -386,27 +391,27 @@ public class GameScreen implements Screen {
 				iterLaserEnemigo.remove();
 			}
 			if(laser.overlaps(nave)) {
-				nave.quitarVida();
+				nave.quitarVida(laser.obtenerDanio());
 				iterLaserEnemigo.remove();
 			}
 			
 		}
-		
+		//Muevo el fondo
 		Iterator<Rectangle> iterFondo = fondos.iterator();
 		while(iterFondo.hasNext()) {
 			Rectangle fondo = iterFondo.next();
 			fondo.y += (velocidad - 500) * Gdx.graphics.getDeltaTime() * pause;
-			if(fondo.y < 64) {
+			if(fondo.y < -64) {
 				iterFondo.remove();
 			}
 			
 		}
 		
 		//Si se acaban las vidas se muestra la pantalla de muerte
-		/*if(nave.obtenerVida() <= 0) {
+		if(nave.obtenerVida() <= 0) {
 			musica.stop();
-			game.setScreen(new DeadScreen(game, puntuacion));
-		}*/
+			game.setScreen(new NombreScreen(game, puntuacion));
+		}
 		
 		//Si se ha recogido el item del tiempo se disminiye el retardo
 		if(itemTiempo) {
@@ -439,6 +444,15 @@ public class GameScreen implements Screen {
 		laseres.add(laser);
 	}
 	
+	private void spawnLaserEnemigo(NaveEnemiga enemigo) {
+		if(enemigo.obtenerTipo().equals("enemigo2")) {
+			spawnLaserEnemigo2(enemigo);
+		}
+		else if(enemigo.obtenerTipo().equals("enemigo3")) {
+			spawnLaserEnemigo3(enemigo);
+		}
+	}
+	
 	private void spawnLaserEnemigo2(NaveEnemiga enemigo) {
 		LaserEnemigo2 laser = new LaserEnemigo2(enemigo);
 		laser.x = enemigo.x + 32;
@@ -448,13 +462,28 @@ public class GameScreen implements Screen {
 		laseresEnemigos.add(laser);
 	}
 	
-	private void spawnEnemigo0(Array<NaveEnemiga> enemigos2) {
-		int numero = MathUtils.random(0, 6);
+	private void spawnLaserEnemigo3(NaveEnemiga enemigo) {
+		LaserEnemigo3 laser = new LaserEnemigo3(enemigo);
+		laser.x = enemigo.x + 32;
+		laser.y = enemigo.y;
+		laser.width = 8;
+		laser.height = 16;
+		laseresEnemigos.add(laser);
+	}
+	
+	private void spawnEnemigo0() {
+		int numero = MathUtils.random(0, 7);
 		if(numero <= 3) {
 			SpawnUtils.spawnEnemigo(enemigos);
 		}
 		if(numero > 3) {
 			SpawnUtils.spawnEnemigo2(enemigos);
+		}
+		if(numero == 7 && puntuacion > 150) {
+			int numero2 = MathUtils.random(0, 20);
+			if(numero2 == 0) {
+				SpawnUtils.spawnEnemigo3(enemigos);
+			}
 		}
 		
 	}

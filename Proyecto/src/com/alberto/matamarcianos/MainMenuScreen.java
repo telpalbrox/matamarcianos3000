@@ -32,7 +32,7 @@ public class MainMenuScreen implements Screen{
 		game.font.draw(game.batch, "Pulsa A para moverte a la derecha", 100, 750);
 		game.font.draw(game.batch, "Pulsa D para moverte a la izquierda", 100, 700);
 		game.font.draw(game.batch, "Pulsa L para disparar", 100, 650);
-		game.font.draw(game.batch, "VERSION 19.12.2013 ALPHA ESCRITORIO 0.0.2", 100, 600);
+		game.font.draw(game.batch, "VERSION 20.12.2013 ALPHA ESCRITORIO 0.0.3", 100, 600);
 		game.font.draw(game.batch, "Toca en cualquier lugar o pulsa k...", 100, 550);
 		game.batch.end();
 		

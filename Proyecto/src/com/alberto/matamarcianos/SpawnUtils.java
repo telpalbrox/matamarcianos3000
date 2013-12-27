@@ -1,5 +1,14 @@
 package com.alberto.matamarcianos;
 
+import com.alberto.matamarcianos.enemgos.Enemigo;
+import com.alberto.matamarcianos.enemgos.Enemigo2;
+import com.alberto.matamarcianos.enemgos.Enemigo3;
+import com.alberto.matamarcianos.enemgos.NaveEnemiga;
+import com.alberto.matamarcianos.items.Item;
+import com.alberto.matamarcianos.items.ItemRetardo;
+import com.alberto.matamarcianos.items.ItemTiempo;
+import com.alberto.matamarcianos.items.ItemVelocidad;
+import com.alberto.matamarcianos.items.ItemVida;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 
