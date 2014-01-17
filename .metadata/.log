@@ -463,3 +463,39 @@ Binding(CTRL+D,
 		,,true),null),
 	org.eclipse.ui.defaultAcceleratorConfiguration,
 	org.eclipse.ui.textEditorScope,,,system)
+
+!ENTRY org.eclipse.egit.core 4 0 2014-01-17 21:47:15.595
+!MESSAGE An exception occurred during push on URI https://github.com/telpalbrox/matamarcianos3000.git: https://github.com/telpalbrox/matamarcianos3000.git: not authorized
+!STACK 0
+org.eclipse.jgit.errors.TransportException: https://github.com/telpalbrox/matamarcianos3000.git: not authorized
+	at org.eclipse.jgit.transport.TransportHttp.connect(TransportHttp.java:479)
+	at org.eclipse.jgit.transport.TransportHttp.openPush(TransportHttp.java:398)
+	at org.eclipse.jgit.transport.PushProcess.execute(PushProcess.java:154)
+	at org.eclipse.jgit.transport.Transport.push(Transport.java:1173)
+	at org.eclipse.egit.core.op.PushOperation.run(PushOperation.java:190)
+	at org.eclipse.egit.ui.internal.push.ConfirmationPage$2.run(ConfirmationPage.java:206)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:121)
+
+!ENTRY org.eclipse.egit.core 4 0 2014-01-17 21:47:24.788
+!MESSAGE An exception occurred during push on URI https://github.com/telpalbrox/matamarcianos3000.git: https://github.com/telpalbrox/matamarcianos3000.git: not authorized
+!STACK 0
+org.eclipse.jgit.errors.TransportException: https://github.com/telpalbrox/matamarcianos3000.git: not authorized
+	at org.eclipse.jgit.transport.TransportHttp.connect(TransportHttp.java:479)
+	at org.eclipse.jgit.transport.TransportHttp.openPush(TransportHttp.java:398)
+	at org.eclipse.jgit.transport.PushProcess.execute(PushProcess.java:154)
+	at org.eclipse.jgit.transport.Transport.push(Transport.java:1173)
+	at org.eclipse.egit.core.op.PushOperation.run(PushOperation.java:190)
+	at org.eclipse.egit.ui.internal.push.ConfirmationPage$2.run(ConfirmationPage.java:206)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:121)
+
+!ENTRY org.eclipse.egit.core 4 0 2014-01-17 21:54:15.969
+!MESSAGE An exception occurred during push on URI https://github.com/telpalbrox/matamarcianos3000.git: https://github.com/telpalbrox/matamarcianos3000.git: not authorized
+!STACK 0
+org.eclipse.jgit.errors.TransportException: https://github.com/telpalbrox/matamarcianos3000.git: not authorized
+	at org.eclipse.jgit.transport.TransportHttp.connect(TransportHttp.java:479)
+	at org.eclipse.jgit.transport.TransportHttp.openPush(TransportHttp.java:398)
+	at org.eclipse.jgit.transport.PushProcess.execute(PushProcess.java:154)
+	at org.eclipse.jgit.transport.Transport.push(Transport.java:1173)
+	at org.eclipse.egit.core.op.PushOperation.run(PushOperation.java:190)
+	at org.eclipse.egit.ui.internal.push.ConfirmationPage$2.run(ConfirmationPage.java:206)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:121)
