@@ -3,11 +3,15 @@ package com.alberto.matamarcianos.enemgos;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
-public abstract class NaveEnemiga extends Rectangle{
+/**
+ * Clase abstracta de la que heredan todos los enemigos
+ * Contiene todos los metodos de lo enemigos
+ * @author alberto
+ *
+ */
+public abstract class NaveEnemiga extends Rectangle {
 	
-	/**
-	 * 
-	 */
+	//Atributos
 	private static final long serialVersionUID = 1L;
 	int vida, vidaInicial;
 	static Texture imagen;
@@ -17,38 +21,58 @@ public abstract class NaveEnemiga extends Rectangle{
 	float tiempoLaser, tiempoMuerte;
 	boolean disparaLaser, animacion, muerto;
 	
-	public void quitarVida() {
-		
-	}
+	/**
+	 * Quita uno de vida al enemigo
+	 */
+	public abstract void quitarVida();
 	
-	public Texture cargarTextura() {
-		return imagen;
-	}
+	/**
+	 * @return La textura del enemigo
+	 */
+	public abstract Texture cargarTextura();
 	
-	public String obtenerTipo() {
-		return tipo;
-	}
+	/**
+	 * @return El tipo de enemigo (enemigo, enemigo2...)
+	 */
+	public abstract String obtenerTipo();
 	
-	public int obtenerVida() {
-		return vida;
-	}
+	/**
+	 * @return La vida actual del enemigo
+	 */
+	public abstract int obtenerVida();
 	
 	public int obtenerVelocidad() {
 		return velocidad;
 	}
 	
+	/**
+	 * Fija la velocidad a la que se mueve el enemigo
+	 * @param velocidad
+	 */
 	public void fijarVelocidad(int velocidad) {
 		
 	}
 	
+	/**
+	 * Fija el tiempo en el que se disparo el ultimo laser
+	 * @param tiempo
+	 */
 	public void fijarTiempoLaser(float tiempo) {
 		tiempoLaser = tiempo;
 	}
 	
+	/**
+	 * Retorna el instante en que se disparo el ultimo laser
+	 * @return en que se disparo el ultimo laser
+	 */
 	public float obtenerTiempoLaser() {
 		return tiempoLaser;
 	}
 	
+	/**
+	 * 
+	 * @param bool
+	 */
 	public void fijarDisparaLaser(boolean bool) {
 		disparaLaser = bool;
 	}

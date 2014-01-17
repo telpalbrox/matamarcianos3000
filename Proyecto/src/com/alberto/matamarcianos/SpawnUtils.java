@@ -9,12 +9,14 @@ import com.alberto.matamarcianos.items.ItemRetardo;
 import com.alberto.matamarcianos.items.ItemTiempo;
 import com.alberto.matamarcianos.items.ItemVelocidad;
 import com.alberto.matamarcianos.items.ItemVida;
+import com.alberto.matamarcianos.laseres.LaserEnemigo2;
+import com.alberto.matamarcianos.laseres.LaserEnemigo3;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 
 public class SpawnUtils {
-	static final int RESOLUCIONX = Resolucion.x();
-	static final int RESOLUCIONY = Resolucion.y();
+	static final int RESOLUCIONX = InfoUtils.x();
+	static final int RESOLUCIONY = InfoUtils.y();
 	
 	/*public static void spawnEnemigo2(Array<NaveEnemiga> enemigos) {
 		Enemigo2 enemigo = new Enemigo2();
@@ -33,7 +35,48 @@ public class SpawnUtils {
 		enemigo.width = 64;
 		enemigos.add(enemigo);
 	}*/
+	/**
+	 * Spawn de los laseres de los ememigos segun su tipo
+	 * @param enemigo
+	 */
+	public static void spawnLaserEnemigo(NaveEnemiga enemigo) {
+		if(enemigo.obtenerTipo().equals("enemigo2")) {
+			spawnLaserEnemigo2(enemigo);
+		}
+		else if(enemigo.obtenerTipo().equals("enemigo3")) {
+			spawnLaserEnemigo3(enemigo);
+		}
+	}
 	
+	/**
+	 * Spawn del laser del enemigo2
+	 * @param enemigo
+	 */
+	private static void spawnLaserEnemigo2(NaveEnemiga enemigo) {
+		LaserEnemigo2 laser = new LaserEnemigo2(enemigo);
+		laser.x = enemigo.x + 32;
+		laser.y = enemigo.y;
+		laser.width = 8;
+		laser.height = 16;
+		GameScreen.laseresEnemigos.add(laser);
+	}
+	/**
+	 * Spawn del laser del enemigo3
+	 * @param enemigo
+	 */
+	private static void spawnLaserEnemigo3(NaveEnemiga enemigo) {
+		LaserEnemigo3 laser = new LaserEnemigo3(enemigo);
+		laser.x = enemigo.x + 32;
+		laser.y = enemigo.y;
+		laser.width = 8;
+		laser.height = 16;
+		GameScreen.laseresEnemigos.add(laser);
+	}
+	
+	/**
+	 * Spawnea un enemigo3
+	 * @param enemigos
+	 */
 	public static void spawnEnemigo3(Array<NaveEnemiga> enemigos) {
 		boolean coinciden = true;
 		Enemigo3 enemigo = new Enemigo3();
@@ -54,6 +97,10 @@ public class SpawnUtils {
 		enemigos.add(enemigo);
 	}
 	
+	/**
+	 * Spawnea un enemigo normal
+	 * @param enemigos
+	 */
 	public static void spawnEnemigo(Array<NaveEnemiga> enemigos) {
 		boolean coinciden = true;
 		Enemigo enemigo = new Enemigo();
@@ -74,6 +121,10 @@ public class SpawnUtils {
 		enemigos.add(enemigo);
 	}
 	
+	/**
+	 * Spawnea un enemigo2
+	 * @param enemigos
+	 */
 	public static void spawnEnemigo2(Array<NaveEnemiga> enemigos) {
 		boolean coinciden = true;
 		Enemigo2 enemigo = new Enemigo2();
@@ -104,6 +155,10 @@ public class SpawnUtils {
 		enemigos.add(enemigo);
 	}*/
 	
+	/**
+	 * Spawnea un Item que vuelve invencible a la nave durante 5 segundos
+	 * @param items
+	 */
 	public static void spawnItemInvulnerabilidad(Array<Item> items) {
 		ItemRetardo item = new ItemRetardo();
 		item.x = MathUtils.random(0, RESOLUCIONX-64);
@@ -113,6 +168,10 @@ public class SpawnUtils {
 		items.add(item);
 	}
 	
+	/**
+	 * Spawnea un item que aumenta la vida de la nave
+	 * @param items
+	 */
 	public static void spawnItemVida(Array<Item> items) {
 		ItemVida item = new ItemVida();
 		item.x = MathUtils.random(0, RESOLUCIONX-64);
@@ -122,6 +181,10 @@ public class SpawnUtils {
 		items.add(item);
 	}
 	
+	/**
+	 * Spawnea un item que reduce el tiempo entre disparo temporalmente
+	 * @param items
+	 */
 	public static void spawnItemTiempo(Array<Item> items) {
 		ItemTiempo item = new ItemTiempo();
 		item.x = MathUtils.random(0, RESOLUCIONX-64);
@@ -131,6 +194,10 @@ public class SpawnUtils {
 		items.add(item);
 	}
 	
+	/**
+	 * Spawnea un item que aumenta la velocidad de la nave
+	 * @param items
+	 */
 	public static void spawnItemVelocidad(Array<Item> items) {
 		ItemVelocidad item = new ItemVelocidad();
 		item.x = MathUtils.random(0, RESOLUCIONX-64);
@@ -140,6 +207,11 @@ public class SpawnUtils {
 		items.add(item);
 	}
 	
+	/**
+	 * Spawnea el ladrillo, de momento no hace nada...
+	 * @param items
+	 * @param enemigo
+	 */
 	public static void spawnItemRetardo(Array<Item> items, NaveEnemiga enemigo) {
 		ItemRetardo item = new ItemRetardo();
 		item.x = enemigo.x + enemigo.width/2;

@@ -8,8 +8,8 @@ public class Main {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "Espacio";
 		cfg.useGL20 = false;
-		cfg.width = Resolucion.x();
-		cfg.height = Resolucion.y();
+		cfg.width = InfoUtils.x();
+		cfg.height = InfoUtils.y();
 		cfg.resizable = false;
 		
 		new LwjglApplication(new Espacio(), cfg);

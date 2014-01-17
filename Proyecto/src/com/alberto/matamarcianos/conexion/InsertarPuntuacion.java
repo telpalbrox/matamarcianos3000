@@ -1,0 +1,54 @@
+package com.alberto.matamarcianos.conexion;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
+import com.alberto.matamarcianos.InfoUtils;
+
+public class InsertarPuntuacion {
+	
+	public static String jugador;
+	public static int puntuacion;
+
+	public static void insertarPuntuaciones(String jugador, int puntuacion) {
+		Connection con = null;
+		PreparedStatement pstm = null;
+		InfoUtils informacion = new InfoUtils();
+
+		try {
+			con = MysqlConexion.obtenerConexion();
+			String sql = "INSERT INTO puntuaciones (jugador, puntuacion, version)";
+			sql += "VALUES (?,?,?)";
+
+			pstm = con.prepareStatement(sql);
+
+			pstm.setString(1, jugador);
+			pstm.setInt(2, puntuacion);
+			pstm.setString(3, informacion.version());
+			pstm.executeUpdate();
+			
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+			throw new RuntimeException(ex);
+		}
+		finally {
+			try {
+				pstm.close();
+			}
+			catch(Exception ex) {
+				ex.printStackTrace();
+				throw new RuntimeException(ex);
+			}
+		}
+	}
+	
+	public static Thread insertarPuntuacion() {
+		return new Thread(new Runnable() {
+			@Override
+			public void run() {
+				insertarPuntuaciones(jugador,puntuacion);
+			}
+		});
+	}
+}

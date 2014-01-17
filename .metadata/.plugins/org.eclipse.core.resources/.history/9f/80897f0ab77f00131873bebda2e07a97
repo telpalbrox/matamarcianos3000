@@ -1,0 +1,18 @@
+package com.alberto.matamarcianos;
+
+import com.alberto.matamarcianos.enemgos.NaveEnemiga;
+import com.alberto.matamarcianos.items.Item;
+import com.alberto.matamarcianos.laseres.LaserEnemigo;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
+
+public class Escenario {
+	
+	public void calcularChoques(Array<Rectangle> laseres, Array<Rectangle> fondos,
+			Array<NaveEnemiga> enemigos, Array<Item> items,
+			Array<LaserEnemigo> laseresEnemigos, Nave nave) {
+		
+		
+	}
+
+}

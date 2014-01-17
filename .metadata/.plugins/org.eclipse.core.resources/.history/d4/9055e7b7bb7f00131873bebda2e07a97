@@ -1,0 +1,5 @@
+Changelog 0.0.3:
+	+ Separado el render del juego del calculo de choques
+	+ Aniadido un nuevo enemigo
+	+ Si quitan vida a la nave es invulnerable durante 5 segundos
+	- Solucionado el problema con el envio de las puntuaciones

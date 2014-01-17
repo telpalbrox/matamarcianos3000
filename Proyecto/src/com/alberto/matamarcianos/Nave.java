@@ -2,11 +2,15 @@ package com.alberto.matamarcianos;
 
 import com.badlogic.gdx.math.Rectangle;
 
+/**
+ * Nave principal del juego, controlada por el usuario
+ * @author alberto
+ *
+ */
+
 public class Nave extends Rectangle {
 	
-	/**
-	 * 
-	 */
+	//Atributos
 	private static final long serialVersionUID = 1L;
 	private boolean invulnerabilidad = false;
 	private boolean naveAcel = false;
@@ -21,70 +25,126 @@ public class Nave extends Rectangle {
 		
 	}
 	
-	public void quitarVida() {
+	/**
+	 * Se quita un punto de vida a la nave y se vuelve invulnerable durante
+	 * 5 segundos
+	 * @param tiempo Cuando se ha quitado la vida a la nave
+	 */
+	public void quitarVida(float tiempo) {
 		if(!invulnerabilidad) {
 			vida--;
 		}
+		this.fijarTiempoInvencible(tiempo);
+		this.fijarInvulnerabilidad(true);
 	}
 	
+	/**
+	 * Quita una cantidad de vida a la nave
+	 * @param danio Cuanto danio se quiere quitar
+	 */
 	public void quitarVida(int danio) {
 		if(!invulnerabilidad) {
 			vida -= danio;
 		}
 	}
 	
+	/**
+	 * Aumenta la vida de la nave
+	 * @param numero Cantidad de vida a sumar
+	 */
 	public void sumarVida(int numero) {
 		vida += numero;
 	}
 	
+	/**
+	 * Retorna la vida que tiene la nave
+	 * @return
+	 */
 	public int obtenerVida() {
 		return vida;
 	}
 	
+	/**
+	 * @return si la nave es invencible
+	 */
 	public boolean esInvencible() {
 		return invulnerabilidad;
 	}
 	
+	/**
+	 * Hace invencible a la nave
+	 * @param bool es invencible?
+	 */
 	public void fijarInvulnerabilidad(boolean bool) {
 		this.invulnerabilidad = bool;
 	}
 	
+	/**
+	 * @return Desde cuando es invencible la nave
+	 */
 	public float obtenerTiempoInvencible() {
 		return tiempoInvencible;
 	}
 	
+	/**
+	 * @param tiempo Fija el momente en que se hizo invencible
+	 */
 	public void fijarTiempoInvencible(float tiempo) {
 		this.tiempoInvencible = tiempo;
 	}
 	
+	/**
+	 * @return Tiempo entre disparo y disparo
+	 */
 	public long obtenerRetardo() {
 		return retardo;
 	}
 	
+	/**
+	 * @param ret Tiempo entre disparo y disparo
+	 */
 	public void fijarRetardo(long ret) {
 		this.retardo = ret;
 	}
 	
+	/**
+	 * @return Si la nave se mueve mas rapido de lo normal
+	 */
 	public boolean esAcelerada() {
 		return naveAcel;
 	}
 	
+	/**
+	 * @param bool Si se quiere acelerar la nave
+	 */
 	public void fijarNaveAcel(boolean bool) {
 		this.naveAcel = bool;
 	}
 	
+	/**
+	 * @return Velocidad a la que se mueve la nave
+	 */
 	public int obtenerVelocidadMovimiento() {
 		return velocidadMovimiento;
 	}
 	
+	/**
+	 * @param num Velocidad a la que quieres que se mueva la nave
+	 */
 	public void fijarVelocidadMovimiento(int num) {
 		this.velocidadMovimiento = num;
 	}
 	
+	/**
+	 * @return Instante en el que se acelero la nave
+	 */
 	public float obtenerTiempoAcel() {
 		return tiempoAcel;
 	}
 	
+	/**
+	 * @param tiempo Instante en el que se acelera la nave
+	 */
 	public void fijarTiempoAcel(float tiempo) {
 		this.tiempoAcel = tiempo;
 	}
