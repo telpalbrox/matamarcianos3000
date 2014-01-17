@@ -67,7 +67,7 @@ public class Escenario {
 			if(enemigo.obtenerTipo().equals("enemigo2") || enemigo.obtenerTipo().equals("enemigo3")) {
 				if(!enemigo.obtenerDisparaLaser()) {
 					enemigo.fijarTiempoLaser(GameScreen.tiempo); //Fijo el momento en que disparó
-					enemigo.fijarDisparaLaser(true); //Está disparnado laser
+					enemigo.fijarDisparaLaser(true);
 				}
 				if(enemigo.obtenerTiempoLaser() + 2.5 <= GameScreen.tiempo) {
 					//Si han pasado más de dos segundos desde el último disparo

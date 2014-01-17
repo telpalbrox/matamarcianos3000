@@ -3,4 +3,5 @@ Changelog 0.0.3:
 	+ Aniadido un nuevo enemigo
 	+ Si quitan vida a la nave es invulnerable durante 5 segundos
 	+ Comentada gran parte del codigo
+	+ Ahora las clases abstractas son de verdad abstractas
 	- Solucionado el problema con el envio de las puntuaciones

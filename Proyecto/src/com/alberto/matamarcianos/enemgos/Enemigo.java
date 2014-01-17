@@ -81,4 +81,34 @@ public class Enemigo extends NaveEnemiga{
 		return vidaInicial;
 	}
 
+	@Override
+	public void fijarTiempoLaser(float tiempo) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public float obtenerTiempoLaser() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void fijarDisparaLaser(boolean bool) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int obtenerVelocidadX() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void fijarVelocidadX(int velocidad) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

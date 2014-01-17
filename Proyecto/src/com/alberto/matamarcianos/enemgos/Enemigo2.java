@@ -97,4 +97,16 @@ public class Enemigo2 extends NaveEnemiga {
 	public int obtenerVidaInicial() {
 		return vidaInicial;
 	}
+
+	@Override
+	public int obtenerVelocidadX() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void fijarVelocidadX(int velocidad) {
+		// TODO Auto-generated method stub
+		
+	}
 }
