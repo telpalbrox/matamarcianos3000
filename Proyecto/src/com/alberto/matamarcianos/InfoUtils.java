@@ -12,7 +12,7 @@ public class InfoUtils {
 	Socket s;
 	
 	public String version() {
-		version = "0.0.3B2";
+		version = "0.0.3";
 		/*Calendar calendario = new GregorianCalendar();
 		version += calendario.get(Calendar.DATE);
 		version += ".";

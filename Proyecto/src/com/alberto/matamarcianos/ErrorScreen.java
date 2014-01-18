@@ -22,7 +22,7 @@ public class ErrorScreen implements Screen {
 	
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(1, 0, 0, 0);
+		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
 		camera.update();

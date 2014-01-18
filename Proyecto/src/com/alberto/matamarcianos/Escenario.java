@@ -38,7 +38,7 @@ public class Escenario {
 			}
 			//Quito vida si los enemigos se chocan cotra la nave
 			if(enemigo.overlaps(GameScreen.nave) && !enemigo.esAnimacion()) {
-				GameScreen.nave.quitarVida(GameScreen.tiempo);
+				GameScreen.nave.quitarVida();
 				GameScreen.explosionSonido.play(GameScreen.volumen);
 				enemigo.fijarTiempoMuerte(GameScreen.tiempo);
 				enemigo.fijarAnimacion(true);
@@ -60,7 +60,7 @@ public class Escenario {
 			}
 			//Quito vida si los enemigos llegan al final de la pantalla
 			if(enemigo.y <= -64) {
-				GameScreen.nave.quitarVida(GameScreen.tiempo);
+				GameScreen.nave.quitarVida();
 				iterEnemigo.remove();
 			}
 			//Si es enemigo de tipo 2 o 3 dispara laser

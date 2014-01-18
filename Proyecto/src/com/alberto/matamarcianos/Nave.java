@@ -30,12 +30,10 @@ public class Nave extends Rectangle {
 	 * 5 segundos
 	 * @param tiempo Cuando se ha quitado la vida a la nave
 	 */
-	public void quitarVida(float tiempo) {
+	public void quitarVida() {
 		if(!invulnerabilidad) {
 			vida--;
 		}
-		this.fijarTiempoInvencible(tiempo);
-		this.fijarInvulnerabilidad(true);
 	}
 	
 	/**
