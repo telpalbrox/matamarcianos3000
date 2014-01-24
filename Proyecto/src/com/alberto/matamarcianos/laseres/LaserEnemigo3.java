@@ -4,7 +4,7 @@ import com.alberto.matamarcianos.enemgos.NaveEnemiga;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
-public class LaserEnemigo3 extends LaserEnemigo {
+public class LaserEnemigo3 extends Laser {
 	
 	/**
 	 * 
@@ -39,4 +39,7 @@ public class LaserEnemigo3 extends LaserEnemigo {
 	public void dispose() {
 		imagen.dispose();
 	}
+
+	@Override
+	public void fijarDanio(int danio) {}
 }

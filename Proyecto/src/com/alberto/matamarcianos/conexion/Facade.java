@@ -10,9 +10,8 @@ public class Facade {
 	}
 	
 	public void insertarPuntuacion(String jugador, int puntuacion) {
-		InsertarPuntuacion.jugador = jugador;
-		InsertarPuntuacion.puntuacion = puntuacion;
-		InsertarPuntuacion.insertarPuntuacion().start();
+		InsertarPuntuacion.insertarPuntuaciones(jugador, puntuacion);
+		
 	}
 
 }

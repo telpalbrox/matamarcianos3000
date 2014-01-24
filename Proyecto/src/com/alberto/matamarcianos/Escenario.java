@@ -1,24 +1,33 @@
 package com.alberto.matamarcianos;
 
 import java.util.Iterator;
+
 import com.alberto.matamarcianos.enemgos.NaveEnemiga;
 import com.alberto.matamarcianos.items.Item;
-import com.alberto.matamarcianos.laseres.LaserEnemigo;
+import com.alberto.matamarcianos.laseres.Laser;
+import com.alberto.matamarcianos.screens.EnviarPuntuacion;
+import com.alberto.matamarcianos.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 
+/**
+ * En esta clase se comprueba los choques de los elementos que hay en pantall
+ * ademas de realizar las acciones pertinentes.
+ * @author alberto
+ *
+ */
 public class Escenario {
-	
+
 	static final int RESOLUCIONX = InfoUtils.x();
 	static final int RESOLUCIONY = InfoUtils.y();
 
 	public static void calcularChoques() {
 		//Muevo los disparos
-		Iterator<Rectangle> iterLaser = GameScreen.laseres.iterator();
+		Iterator<Laser> iterLaser = GameScreen.laseresNave.iterator();
 		while(iterLaser.hasNext()) {
-			Rectangle laser = iterLaser.next();
-			laser.y += 400 * Gdx.graphics.getDeltaTime() * GameScreen.pause;
+			Laser laser = iterLaser.next();
+			laser.y += laser.obtenerVelocidadLaser() * Gdx.graphics.getDeltaTime();
 			for(NaveEnemiga enemigo : GameScreen.enemigos) {
 				//Control de choques contra el laser
 				if(enemigo.obtenerVida() >= 0 && enemigo.overlaps(laser)) {
@@ -34,7 +43,7 @@ public class Escenario {
 			//Segun la puntuacion llevan una velocidad, excepto Enemigo3 que tiene un movimiento especial
 			if(!enemigo.obtenerTipo().equals("enemigo3")) {
 				enemigo.fijarVelocidad(GameScreen.velocidad);
-				enemigo.y += enemigo.obtenerVelocidad() * Gdx.graphics.getDeltaTime() * GameScreen.pause;
+				enemigo.y += enemigo.obtenerVelocidad() * Gdx.graphics.getDeltaTime();
 			}
 			//Quito vida si los enemigos se chocan cotra la nave
 			if(enemigo.overlaps(GameScreen.nave) && !enemigo.esAnimacion()) {
@@ -81,6 +90,8 @@ public class Escenario {
 			}
 			//Si es enemigo3
 			if(enemigo.obtenerTipo().equals("enemigo3")) {
+				System.out.println("PosicionX enemigo3: "+enemigo.x);
+				System.out.println("PosicionY enemigo3: "+enemigo.y);
 				//Movimientos en pantalla
 				if(enemigo.y < RESOLUCIONY - 200) {
 					if(enemigo.y <= RESOLUCIONY - 400) {
@@ -92,7 +103,7 @@ public class Escenario {
 							enemigo.moverAbajo(GameScreen.velocidad);
 						}
 					}
-					if(enemigo.y < RESOLUCIONY - 400 && enemigo.y > 396) {
+					if(enemigo.y < RESOLUCIONY - 400) {
 						enemigo.moverDerecha(GameScreen.velocidad);
 						if(enemigo.x > RESOLUCIONX - 70) {
 							enemigo.moverArriba(GameScreen.velocidad);
@@ -116,15 +127,16 @@ public class Escenario {
 					GameScreen.nave.sumarVida(1);
 				}
 				if(item.obtenerTipo().equals("tiempo")) {
-					GameScreen.itemTiempo = true;
-					GameScreen.tiempoActual = GameScreen.tiempo;
+					GameScreen.nave.fijarLaserAcelerado(true);
+					GameScreen.nave.fijarRetardo(Nave.retardoAcelerado);
+					GameScreen.nave.fijarTiempoRetardoAcel(GameScreen.tiempo);
 				}
 				if(item.obtenerTipo().equals("invulnerabilidad")) {
 					GameScreen.nave.fijarTiempoInvencible(GameScreen.tiempo);
 					GameScreen.nave.fijarInvulnerabilidad(true);
 				}
 				if(item.obtenerTipo().equals("velocidad")) {
-					GameScreen.nave.fijarVelocidadMovimiento(1600);
+					GameScreen.nave.fijarVelocidadMovimientoX(1600);
 					GameScreen.nave.fijarTiempoAcel(GameScreen.tiempo);
 					GameScreen.nave.fijarNaveAcel(true);
 				}
@@ -136,10 +148,10 @@ public class Escenario {
 		}
 
 		//Muevo los laseres enemigos
-		Iterator<LaserEnemigo> iterLaserEnemigo = GameScreen.laseresEnemigos.iterator();
+		Iterator<Laser> iterLaserEnemigo = GameScreen.laseresEnemigos.iterator();
 		while(iterLaserEnemigo.hasNext()) {
-			LaserEnemigo laser = iterLaserEnemigo.next();
-			laser.y += (GameScreen.velocidad - 50) * Gdx.graphics.getDeltaTime() * GameScreen.pause;
+			Laser laser = iterLaserEnemigo.next();
+			laser.y += (GameScreen.velocidad - laser.obtenerVelocidadLaser()) * Gdx.graphics.getDeltaTime() * GameScreen.pause;
 			//Si llegan abajo se eliminan
 			if(laser.y <= -16) {
 				iterLaserEnemigo.remove();
@@ -154,7 +166,8 @@ public class Escenario {
 		Iterator<Rectangle> iterFondo = GameScreen.fondos.iterator();
 		while(iterFondo.hasNext()) {
 			Rectangle fondo = iterFondo.next();
-			fondo.y += (GameScreen.velocidad - 500) * Gdx.graphics.getDeltaTime() * GameScreen.pause;
+			fondo.y += (GameScreen.velocidad - 500) * Gdx.graphics.getDeltaTime();
+			fondo.x += -(GameScreen.nave.obtenerVelocidadMovimiento()) * Gdx.graphics.getDeltaTime();
 			if(fondo.y < -64) {
 				iterFondo.remove();
 			}
@@ -162,6 +175,32 @@ public class Escenario {
 		}
 
 
+	}
+
+	public static void calculaEstadoNave() {
+		//Si la nave se sale de los limites
+		if(GameScreen.nave.x < 0) GameScreen.nave.x = 0;
+		if(GameScreen.nave.x > RESOLUCIONX - 64) GameScreen.nave.x = RESOLUCIONX - 64;
+		
+		//Si se acaban las vidas se muestra la pantalla de muerte
+		if(GameScreen.nave.obtenerVida() <= 0) {
+			GameScreen.musica.stop();
+			GameScreen.game.setScreen(new EnviarPuntuacion(GameScreen.game, GameScreen.puntuacion));
+		}
+		
+		if(GameScreen.nave.esInvencible() && GameScreen.nave.obtenerTiempoInvencible() + 5 <= GameScreen.tiempo) {
+			GameScreen.nave.fijarInvulnerabilidad(false);
+		}
+		
+		if(GameScreen.nave.esAcelerada() && GameScreen.nave.obtenerTiempoAcel() + 5 <= GameScreen.tiempo) {
+			GameScreen.nave.fijarVelocidadMovimientoX(600);
+			GameScreen.nave.fijarNaveAcel(false);
+		}
+		
+		if(GameScreen.nave.esLaserAcelerado() && GameScreen.nave.obtenerTiempoRetardoAcel() + 5 <= GameScreen.tiempo) {
+			GameScreen.nave.fijarRetardo(100000000);
+			GameScreen.nave.fijarLaserAcelerado(false);
+		}
 	}
 
 }

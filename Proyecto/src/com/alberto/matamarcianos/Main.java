@@ -6,8 +6,9 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 public class Main {
 	public static void main(String[] args) {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
-		cfg.title = "Espacio";
-		cfg.useGL20 = false;
+		InfoUtils info = new InfoUtils();
+		cfg.title = "Matamarcianos 3000 | " + info.version();
+		cfg.useGL20 = true;
 		cfg.width = InfoUtils.x();
 		cfg.height = InfoUtils.y();
 		cfg.resizable = false;

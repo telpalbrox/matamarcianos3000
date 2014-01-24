@@ -6,20 +6,21 @@ import java.util.GregorianCalendar;
 
 
 public class InfoUtils {
-	public final static int RESOLUCIONY = 800;
+	public final static int RESOLUCIONY = 725;
 	public final static int RESOLUCIONX = 480;
 	private String version;
+	static boolean juego = false;
 	Socket s;
 	
 	public String version() {
-		version = "0.0.3";
+		version = "0.0.4";
 		/*Calendar calendario = new GregorianCalendar();
 		version += calendario.get(Calendar.DATE);
 		version += ".";
 		version += calendario.get(Calendar.MONTH) + 1;
 		version += ".";
 		version += calendario.get(Calendar.YEAR);
-		version += " ALPHA 0.0.3";*/
+		version += " ALPHA 0.0.4";*/
 		return version;
 	}
 	
@@ -50,6 +51,15 @@ public class InfoUtils {
 		catch (Exception ex) {
 			return false;
 		}
+	}
+	
+	public boolean esJuegoCreado() {
+		return juego;
+	}
+	
+	@SuppressWarnings("static-access")
+	public void fijarJuegoCreado(boolean bool) {
+		this.juego = bool;
 	}
 
 }

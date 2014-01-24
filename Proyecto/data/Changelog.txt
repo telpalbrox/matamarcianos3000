@@ -1,3 +1,13 @@
+Changelog 0.0.4:
+	+ Separado el render del juego de los controles de la nave
+	+ Pantalla de pause en condiciones
+	+ Nuevo menu principal
+	+ Nueva pantalla al iniciar el juego
+	+ Nueva pantalla para enviar la puntuacion
+	+ Nuevo sistema de control para pantallas tactiles
+	+ Boton de pause
+	+ Las clases de las pantallas estan ahora en otro paquete
+	+ La nave ahora no se mueve si no se pulsa a su altura
 Changelog 0.0.3:
 	+ Separado el render del juego del calculo de choques
 	+ Aniadido un nuevo enemigo

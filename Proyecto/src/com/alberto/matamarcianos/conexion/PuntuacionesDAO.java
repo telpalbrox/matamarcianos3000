@@ -6,13 +6,7 @@ import java.sql.ResultSet;
 import java.util.Collection;
 import java.util.Vector;
 
-class ObtenerPuntuaciones extends Thread {
-	public void run() {
-		
-	}
-}
-
-public class PuntuacionesDAO extends Thread {
+public class PuntuacionesDAO {
 	
 	public Collection<PuntuacionesDTO> obtenerPuntuaciones() {
 		Connection con = null;

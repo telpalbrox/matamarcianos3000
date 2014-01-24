@@ -4,14 +4,14 @@ import com.alberto.matamarcianos.enemgos.NaveEnemiga;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
-public class LaserEnemigo2 extends LaserEnemigo {
+public class LaserEnemigo2 extends Laser {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	static Texture imagen = new Texture(Gdx.files.internal("data/images/laser.png"));
 	String tipo = "laserEnemigo2";
-	int velocidadLaser;
+	int velocidadLaser = 50;
 	int velocidad;
 	int danio = 1;
 	
@@ -38,5 +38,8 @@ public class LaserEnemigo2 extends LaserEnemigo {
 	public void dispose() {
 		imagen.dispose();
 	}
+
+	@Override
+	public void fijarDanio(int danio) {}
 
 }
